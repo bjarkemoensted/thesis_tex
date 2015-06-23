@@ -1,0 +1,22 @@
+  <page>
+    <title>Horse</title>
+    <ns>0</ns>
+    <id>12</id>
+    <revision>
+      <id>619093743</id>
+      <parentid>618899706</parentid>
+      <timestamp>2014-07-30T07:26:05Z</timestamp>
+      <contributor>
+        <username>Eduen</username>
+        <id>7527773</id>
+      </contributor>
+      <text xml:space="preserve">
+===Section title===
+[[Image:name_of_image_file] Image caption]]]
+Lots of educational text containing, among other things links to [[other article|text to display]].
+</text>
+      <sha1>n57mnhttuhxxpq1nanak3zhmmmcl622</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+  </page>

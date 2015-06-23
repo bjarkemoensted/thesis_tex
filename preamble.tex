@@ -1,0 +1,398 @@
+\documentclass[12pt,a4paper,twoside,english]{memoir}
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % Ting og sager fra Esben % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc} %utf8
+\usepackage[english,danish]{babel}
+\pdfoutput=1
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+%\graphicspath{{./figures/}}
+\usepackage{url}
+
+\usepackage{etoolbox}
+\newtoggle{twoside}
+\toggletrue{twoside}
+\newtoggle{final}
+
+\usepackage[bookmarks, pagebackref=false]{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\definecolor{orange}{cmyk}{0,0.5,1,0}
+\definecolor{rossoCP3}{cmyk}{0,.88,.77,.40}
+\definecolor{moerkeroed}{cmyk}{0,.88,.77,.40}
+
+\definecolor{oldhat}{rgb}{0.13671875, 0.15234375, 0.52734375}
+\definecolor{nude}{rgb}{0.79296875, 0.5859375, 0.36328125}
+\definecolor{wine}{rgb}{0.4296875, 0.0546875, 0.0546875}
+
+
+\definecolor{graa}{rgb}{0.8,0.8,0.8}
+\definecolor{moerkegraa}{cmyk}{0.67,0.58,0.54,0.09}
+\definecolor{blaa}{rgb}{0.2,0.2,0.6}
+		%
+		\hypersetup{
+			colorlinks, 
+			bookmarksopen, 
+			bookmarksnumbered,
+			citecolor=oldhat, 		%color of links to bibliography
+			linkcolor=rossoCP3,	%color of internal links
+			urlcolor=rossoCP3,			%color of external links 
+			}
+\usepackage{bm}% bold math
+\usepackage{bbm}
+\usepackage{pxfonts}
+
+\usepackage[section]{placeins}
+\usepackage{xspace}
+\usepackage{cancel} % to make the barred text notation
+
+%
+%
+%Thesis packages
+%
+%
+\usepackage[pass]{geometry}
+\usepackage{youngtab}
+%\usepackage{courier}
+
+\usepackage{slashed}
+
+%\usepackage[style=ieee,backend=bibtex,maxnames=10,maxcitenames=4,backref=false]{biblatex} %options for style: ieee, mla (terrible), nature, science (no article names)
+
+\usepackage{longtable}			%Tables that span several pages
+
+\newcommand{\ea}[1]{
+\begin{align}
+#1
+\end{align}
+}
+
+\newcommand{\vectwo}[2]{
+\left(
+\begin{array}{c} #1 \\ #2 \end{array}
+\right)
+}
+
+\newcommand{\HRule}{{\color{moerkegraa} \rule{\linewidth}{0.5mm}}} %  lines in the title page
+
+\allowdisplaybreaks[1]
+
+\setcounter{tocdepth}{2}
+
+
+%\newcommand{\xxx}[1]{}
+\newcommand{\xxx}[1]{{\color{rossoCP3} \textbf{#1}}\marginpar{$\bullet$}} %G�r en tekstreng r�d og fed, og laver en prik i margenen. God til kommentarer/ting der skal rettes.
+
+
+\newcommand{\identity}{\mathbbm{1}}
+\DeclareMathOperator{\tr}{Tr}
+\newcommand{\MSbar}{$\overline{\textrm{MS}}$}
+\renewcommand{\d}{\textrm{d}}
+
+\usepackage{hyphenat}
+
+\hyphenation{
+  re-nor-ma-liz-ab-le
+}
+
+
+\def\CM{{\cal M}}
+\newcommand{\mP}{{\bar M}_{P}}
+\newcommand{\Pom}{I$\!$P}                % gives pomeron symbol
+\def\lsim{\mathrel{\rlap{\lower4pt\hbox{\hskip1pt$\sim$}}
+    \raise1pt\hbox{$<$}}}                % less than or approx. symbol
+\def\gsim{\mathrel{\rlap{\lower4pt\hbox{\hskip1pt$\sim$}}
+    \raise1pt\hbox{$>$}}}                % greater than or approx. symbol
+
+
+\baselineskip=15pt
+
+\setcounter{totalnumber}{10}
+\renewcommand{\textfraction}{0.0}
+
+
+\setcounter{secnumdepth}{2}
+
+\let\footruleskip\undefined
+\usepackage{fancyhdr}
+\usepackage{pdfpages}
+\newcommand\cleverpageing{\thepage}
+
+\pagestyle{headings}
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\slshape \thepage}
+\fancyhead[LO]{\slshape \rightmark}
+\fancyhead[RE]{\slshape \leftmark}
+\fancyfoot[C]{}
+
+\usepackage{lettrine}
+\setlength{\DefaultNindent}{0em}
+\setcounter{DefaultLines}{3}
+%\newcommand{\fancyfont}{Elzevier}
+\input{fonts/GoudyIn.fd}
+\newcommand*\initfamily{\usefont{U}{GoudyIn}{xl}{n}}
+\renewcommand{\LettrineFontHook}{\initfamily}
+\newcommand{\initial}[2]{\lettrine{\color{moerkeroed}{#1}}{#2}}
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % Ting og sager fra migselv % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\usepackage{mathtools}
+%
+%% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\usepackage{booktabs}
+%Giver følgende syntaks i tabular-environment: \toprule, \midrule, \bottomrule.
+%\multicolumn{antal kolonner}{pos}{text} virker stadig.
+%vandrette linier i dele af tabellen laves med \cmidrule(trimming){i-j}. i-j angiver kolonner, og 'trimming' erstattes med l, r eller lr.
+
+\usepackage{float}
+\newsubfloat{figure}
+\usepackage{framed}
+%Sætter en ramme om et område begrænset af \begin{framed} og \end{framed}.
+\usepackage{ifthen}
+
+\newcommand{\pp}[1]{\left( #1 \right)}
+\newcommand{\sqb}[1]{\left\lbrack #1 \right\rbrack}
+
+\newcommand{\citat}[2]{
+	\ifthenelse{
+		\equal{#2}{}%if no second argument
+	}{%
+	\cite{#1}\@\!\!%
+}{%Else:
+(\!\cite{#1}, #2)\@\!\!%
+}
+}
+%\newcommand{\hest}[2]{\frac{\partial #1}{\partial #2}
+\newcommand{\pardiff}[3][]{
+	\ifthenelse{\equal{#1}{}}{
+		\frac{\partial #2}{\partial #3}	
+	}
+	{
+		\frac{\partial ^#1 \! #2}{\partial #3 ^#1}
+	}
+}
+%%giver differentationsoperatoren (df/dx). F.eks. \pardiff[2]{f}{x}, eller \pardiff{}{x}
+\newcommand{\diff}[3][]{
+	\ifthenelse{\equal{#1}{}}{
+		\frac{\ud #2}{\ud #3}	
+	}
+	{
+		\frac{\ud ^#1 \! #2}{\ud #3 ^#1}
+	}
+}
+\newlength{\testwd}
+\newcommand{\fitpic}[1]{%
+	\settowidth{\testwd}{\includegraphics{#1}}%
+	\message{#1 width=\the\testwd, page=\the\textwidth}%
+	\ifthenelse{\lengthtest{\testwd>\textwidth}}{%
+		\noindent\includegraphics[width=\textwidth]{#1}}{%
+		\centering\includegraphics{#1}\par}%
+}
+%Giver kommandoen \fitpic{fildestination}, som laver et billede så stort som muligt, dog ikke større end siden.
+\DeclareMathOperator{\ud}{d\!}
+% 'upright d'. Gør at du kan afslutte integraler med f.eks. \int x \ud x
+\newcommand{\normdist}{\mathcal{N}(x;\mu,\sigma)}
+\newcommand{\avg}[1]{\left\langle #1 \right\rangle}
+\newcommand{\bracket}[2]{\langle #1 | #2 \rangle}
+\newcommand{\ket}[1]{| #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 |}
+\newcommand{\ssys}{S_{\text{system}}}
+\newcommand{\cb}[1]{\left\{ #1 \right\}}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+% % %Stuff for python source
+\usepackage{listingsutf8}
+\lstdefinestyle{extfiles}{
+	inputencoding=utf8/latin1,
+	language=python,
+	keywordstyle=\bfseries\ttfamily\color{moerkeroed}, %\color[rgb]{0,0,1},
+	identifierstyle=\ttfamily,
+	commentstyle=\color[rgb]{0.6, 0.6, 0.65},
+	stringstyle=\ttfamily\color{oldhat}, %\color[rgb]{0.133,0.545,0.133},
+	showstringspaces=false,
+	basicstyle=\small,
+	numberstyle=\footnotesize,
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	breaklines=true,
+	prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+	breakatwhitespace=false,
+	aboveskip={1.5\baselineskip},
+	columns=flexible,
+%	extendedchars=true,
+	%	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	basicstyle=\tiny,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	%	commentstyle=\color{mygreen},    % comment style
+	%	deletekeywords={...},            % if you want to delete keywords from the given language
+	%	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+	%	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	frame=LRTB,                    % adds a frame around the code
+	frameround = tttt,
+	framerule = 0.4pt,
+	rulecolor = \color{black},
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	%	keywordstyle=\color{blue},       % keyword style
+	%	morekeywords={*,...},            % if you want to add more keywords to the set
+		numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+		numbersep=3mm,                   % how far the line-numbers are from the code
+		numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+		boxpos = c,
+		framexleftmargin=0mm,
+		framexrightmargin = -3mm,
+	%	rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	%	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	%	showstringspaces=false,          % underline spaces within strings only
+	%	showtabs=false,                  % show tabs within strings adding particular underscores
+	%	stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+	%	stringstyle=\color{mymauve},     % string literal style
+	%	tabsize=2,                       % sets default tabsize to 2 spaces
+	%	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+		xrightmargin=-1.1cm,
+		xleftmargin=-0.6cm
+}
+
+
+\lstdefinestyle{snippet}{
+	inputencoding=utf8/latin1,
+	language=python,
+	keywordstyle=\bfseries\ttfamily\color{moerkeroed}, %\color[rgb]{0,0,1},
+	identifierstyle=\ttfamily,
+	commentstyle=\color[rgb]{0.6, 0.6, 0.65},
+	stringstyle=\ttfamily\color{oldhat}, %\color[rgb]{0.133,0.545,0.133},
+	showstringspaces=false,
+	tabsize=4,
+	breaklines=true,
+%	prebreak = \raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+	breakatwhitespace=true,
+%	aboveskip={1.5\baselineskip},
+	columns=flexible,
+	breaklines,
+%	prebreak=\_
+	basicstyle=\tiny,        % the size of the fonts that are used for the code
+	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+	breaklines=true,                 % sets automatic line breaking
+	captionpos=b,                    % sets the caption-position to bottom
+	frameround = tttt,
+	framerule = 0.4pt,
+	rulecolor = \color{black},
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	numbers=none,
+	boxpos = c,
+	framexleftmargin=0mm,
+	framexrightmargin = 0mm,
+	aboveskip=\baselineskip,
+	belowskip=\baselineskip,
+	xrightmargin=0cm,
+	xleftmargin=0cm,
+		frame=LRTB,                    % adds a frame around the code
+		frameround = tttt,
+		framerule = 0.4pt,
+		rulecolor = \color{black}
+}
+
+\renewcommand{\lstlistingname}{Snippet}
+
+\lstdefinelanguage{XML}
+{
+	morestring=[b]",
+	morestring=[s]{>}{<},
+	morecomment=[s]{<?}{?>},
+	stringstyle=\color{black},
+	identifierstyle=\color{moerkeroed},
+	keywordstyle=\color{moerkeroed},
+	morekeywords={xmlns,version,type}% list your attributes here
+}
+
+%For long pieces of source code.
+\newcommand{\code}[1]{
+	\iftoggle{final}{
+		\raggedbottom
+		\lstinputlisting[language=Python, style=extfiles]{#1}
+	}{
+		\includegraphics[width = 0.99\textwidth]{pics/code_placeholder.jpg}
+	}
+}
+
+%For example files to be included as floats
+\newcommand{\floatcode}[2][]{
+%	\begin{minipage}{\linewidth}
+		\lstinputlisting[float=htbp, style=snippet, language=python, #1]{#2}
+%	\end{minipage}
+}
+
+
+% For very short snippets of code
+\lstnewenvironment{snippet}[1][]%
+{\hfill \mbox{} \noindent\minipage{\linewidth}
+	\lstset{style=snippet, frame = none, #1}}
+{\endminipage\hfill\mbox{}}
+
+
+\usepackage[nice]{units}
+% %\unit[val]{dim}
+% %\unitfrac[val]{num}{den}
+
+%\usepackage{SIunitx}
+
+\newcommand{\fnorm}{\frac{1}{(2\pi)^{n/2}}}
+\newcommand{\rint}{\int_{\mathbb{R}^n}}
+\newcommand{\onenorm}{\frac{1}{\sqrt{2\pi}}}
+\newcommand{\infint}{\int_{-\infty}^\infty}
+\newcommand{\stdwidth}{0.9\textwidth}
+\newcommand{\mb}[1]{\mathbf{#1}}
+
+\newlength{\figwidth}
+\setlength{\figwidth}{0.9\textwidth}
+
+\newlength{\dualheight}
+\setlength{\dualheight}{0.33\textheight}
+
+
+\usepackage{todonotes}
+\usepackage{lipsum}
+\usepackage{microtype}
+
+%Override the default part header page to mimick that of classicthesis
+\renewcommand*{\beforepartskip}{\vspace*{0.21\textheight}}
+\renewcommand*{\printpartname}{\partname}
+\renewcommand*{\printpartnum}{\thepart}
+\let\oldprintparttitle\printparttitle
+\renewcommand*{\printparttitle}[1]{\normalfont\small\centering\color{moerkeroed}\textls[160]{\MakeTextUppercase{#1}}}
+
+\newcommand{\e}{\mathrm{e}}
+
+%Disable page numbers on part page
+\makeatletter
+\renewcommand\part{%
+	\if@openright
+	\cleardoublepage
+	\else
+	\clearpage
+	\fi
+	\thispagestyle{empty}%
+	\if@twocolumn
+	\onecolumn
+	\@tempswatrue
+	\else
+	\@tempswafalse
+	\fi
+	\null\vfil
+	\secdef\@part\@spart}
+\makeatother
+
+\newcommand{\bigo}[1]{\mathcal{O}\pp{#1}}

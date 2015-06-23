@@ -1,0 +1,96 @@
+\usepackage{soul}
+
+%%%%%%%%%%%%					%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%  Kapitel layout 	%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%					%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter 
+\newlength\dlf@normtxtw 
+\setlength\dlf@normtxtw{\textwidth} 
+\def\myhelvetfont{\def\sfdefault{mdput}} 
+\newsavebox{\feline@chapter} 
+
+\newcommand\feline@chapter@marker[1][4cm]{%
+	\sbox\feline@chapter{% 
+		\resizebox*{!}{#1}{\fboxsep=1pt%
+			\colorbox{moerkeroed}{\color{white}\bfseries\sffamily\thechapter}% 
+		}}%
+	\rotatebox{90}{% 
+		\resizebox{%
+			\heightof{\usebox{\feline@chapter}}+\depthof{\usebox{\feline@chapter}}}% 
+		{!}{\scshape\so\@chapapp}}\quad%
+	\raisebox{\depthof{\usebox{\feline@chapter}}}{\usebox{\feline@chapter}}%
+} 
+		
+\newcommand\feline@chm[1][4cm]{%
+	\sbox\feline@chapter{\feline@chapter@marker[#1]}% 
+	\makebox[0pt][l]{% aka \rlap
+	\makebox[0cm][r]{\usebox\feline@chapter}%
+	}} 
+
+\makechapterstyle{kap}{
+	\renewcommand\chapnamefont{\normalfont\Large\scshape\raggedleft\so} 
+	\renewcommand\chaptitlefont{\normalfont\Huge\bfseries\scshape\color{moerkeroed}} 
+	\renewcommand\chapternamenum{} \renewcommand\printchaptername{} 
+	\renewcommand\printchapternum{\hfill\feline@chm[2.5cm]\par} 
+	\renewcommand\afterchapternum{\par\vskip\midchapskip} 
+	\renewcommand\printchaptertitle[1]{\chaptitlefont\raggedleft ##1\par}
+}
+
+
+%%%%%%%%%%%%					%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%  Kapitel layout 2	%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%					%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\makeatletter 
+%\newlength\dlf@normtxtw 
+%\setlength\dlf@normtxtw{\textwidth} 
+%\def\myhelvetfont{\def\sfdefault{mdput}} 
+%\newsavebox{\feline@chapter} 
+%
+%\newcommand\feline@chapter@marker[1][4cm]{%
+%	\sbox\feline@chapter{% 
+%		\resizebox*{!}{#1}{\fboxsep=1pt%
+%			\colorbox{moerkeroed}{\color{white}\bfseries\sffamily\thechapter}% 
+%		}}%
+%	\rotatebox{90}{% 
+%		\resizebox{%
+%			\heightof{\usebox{\feline@chapter}}+\depthof{\usebox{\feline@chapter}}}% 
+%		{!}{\scshape\so\@chapapp}}\quad%
+%	\raisebox{\depthof{\usebox{\feline@chapter}}}{\usebox{\feline@chapter}}%
+%} 
+%		
+%\newcommand\feline@chm[1][4cm]{%
+%	\sbox\feline@chapter{\feline@chapter@marker[#1]}% 
+%	\makebox[0pt][l]{% aka \rlap
+%	\makebox[2.5cm][r]{\usebox\feline@chapter}%
+%	}
+%	} 
+%
+%\makechapterstyle{kap2}{
+%	\renewcommand\chapnamefont{\normalfont\Large\scshape\raggedleft\so} 
+%	\renewcommand\chaptitlefont{\normalfont\Huge\bfseries\scshape\color{moerkeroed}} 
+%	\renewcommand\chapternamenum{} 
+%	\renewcommand\printchaptername{} 
+%	\renewcommand\printchapternum{\feline@chm[2.5cm]} 
+%	\renewcommand\afterchapternum{\hfill} 
+%	\renewcommand\printchaptertitle[1]{\chaptitlefont\raggedleft ##1\par}
+%}
+%
+
+\makeatother 
+\chapterstyle{kap}
+
+\newcommand{\ruledsec}[1]{% 
+\Large\bfseries\slshape \raggedleft \textcolor{moerkeroed}{#1} \vspace{-3mm} \rule{\textwidth}{0.2pt}\vspace{-8mm}}
+\newcommand{\redsec}[1]{% 
+\noindent\Large\bfseries \textcolor{moerkeroed}{#1}}
+\setsecheadstyle{\redsec}%\Large \bfseries\slshape \raggedleft}
+\newcommand{\subsec}[1]{%
+\large \bfseries\slshape\color{moerkeroed} #1 \vspace{-0mm}}
+\setsubsecheadstyle{\subsec}%\large \bfseries\color{moerkeroed}}
+\newcommand{\subsubsec}[1]{%
+\fontsize{12.5pt}{1em} \bfseries\color{moerkeroed} #1 \vspace{-2mm}}
+\setsubsubsecheadstyle{\subsubsec}%\large \bfseries\color{moerkeroed}}
+
+

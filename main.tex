@@ -1,0 +1,82 @@
+\input{preamble}
+\include{chapterCP3} %include fancy chapter page style
+\pdfsuppresswarningpagegroup=1  %Yolo!
+
+\newcommand{\thesistitle}{
+\HRule \\[2mm] % Horizontal line
+{\huge \bfseries \textsc{Fra Hades \\[1mm]
+		of \\[1mm]
+		Doom
+	}}\\[2mm]
+	\HRule \\[1.5cm] % Horizontal line	
+}
+
+\newcommand{\nnchapter}[1]{\chapter*{#1}\fancyhead[LO]{\slshape \MakeUppercase{#1}} \fancyhead[RE]{\slshape \MakeUppercase{#1}}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\nnchapters}[1]{\chapter*{#1}\fancyhead[LO]{\slshape \MakeUppercase{#1}} \fancyhead[RE]{\slshape \MakeUppercase{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\thistitle}{My Title May Be Too Long}
+\newcommand{\thisauthor}{My Name}
+
+\title{\texorpdfstring{\Large\color{rossoCP3}\thistitle}{\thistitle}} %Sørger for at der ikke er LaTeX kode i din pdf-fil's hyperlinks.
+\author{\thisauthor}
+
+\toggletrue{final}
+%\includeonly{dtu}
+\begin{document}
+
+\pagenumbering{alph}
+\selectlanguage{english}
+
+\newgeometry{margin=3.775cm}
+	\include{front}
+\restoregeometry
+
+\thispagestyle{empty}
+\clearpage
+\ \thispagestyle{empty}\clearpage
+\pagenumbering{roman}
+
+\nnchapters{Acknowledgements}
+Thank you! Thank you all!
+
+
+\clearpage
+\begin{KeepFromToc} %Don't mention the table of contents in the table of contents. Unless you really like being meta
+  \tableofcontents
+\end{KeepFromToc}
+\fancyhead[LO]{\slshape \MakeUppercase{Contents}} \fancyhead[RE]{\slshape \MakeUppercase{Contents}}
+
+\nnchapters{English abstract}
+WORDS! SOOOOO MANY WORDS!
+
+
+\selectlanguage{danish}
+\nnchapters{Dansk sammenfatning}
+ORD! SAAAAAAAAAA MANGE ORD
+
+\selectlanguage{english}
+
+%\ \thispagestyle{empty}\clearpage
+\cleardoublepage
+\pagenumbering{arabic}
+
+\fancyhead[LO]{\slshape \rightmark}\fancyhead[RE]{\slshape \leftmark} %And we're helping the headers back to being two-sided
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+\include{esa}
+\newpage
+%%% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\include{dtu}
+\newpage
+
+\appendix
+\chapter{Appendix}
+\include{appendix}
+
+\fancyhead[LO]{\slshape \MakeUppercase{Bibliography}} \fancyhead[RE]{\slshape \MakeUppercase{Bibliography}}  %The bibliography header needs to be special too.
+\bibliography{thesis_litterature}
+\bibliographystyle{plain}
+
+\end{document}
+
