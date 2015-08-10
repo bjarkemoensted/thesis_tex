@@ -11,25 +11,29 @@ An example of a categorization problem is the 'bag of words' approach, which has
 
 More formally, the text $T$ is represented as a collection of words $T = \cb{w_1, w_2, \ldots, w_n}$, and the probability of  $T$ actually representing draws from bag $j$ is hence
 \begin{align}
-	P(B_j|T) &= \dfrac{P(T|B_j)P(B_j)}{P(T)}, \\
-	&= \dfrac{\prod_i P(w_i|B_j)P(B_j)}{\sum_j\prod_i P(w_i|B_j)P(B_j)},
+\begin{split}
+		P(B_j|T) &= \dfrac{P(T|B_j)P(B_j)}{P(T)}, \\
+		&= \dfrac{\prod_i P(w_i|B_j)P(B_j)}{\sum_j\prod_i P(w_i|B_j)P(B_j)}, \label{eqn:bayesian_bow_thingy}
+\end{split}
 \end{align}
-for an arbitrary number of bags labelled by $j$. This method is simple and powerful whenever a text is expected to fall in one of several discrete categories (such as spam filters or language detection\todo{ref}). However, for more complex tasks it proves lucrative to attempt instead to assign some kind of meaning to text fragments rather than to consider them analogous to lottery numbers or marbles. This notion of meaning will be elaborated on shortly, as it varies depending on the method of choice, but the overall idea is to ascribe to words a meaning which depends not only on the word itself, but also on the connection between the word and and existing repository of knowledge. The reader may think of this as mimicking the reading comprehension of humans. In itself, the word 'dog' for instance, contains a mere 24 bits of information if stored with a standard encoding, yet a human reader immediately associates a rich amount of existing knowledge to the word, such as dogs being mammals, related to wolves, being a common household pet, etc. The objective of both explicit and latent semantic analysis is to establish a high-dimensional 'concept space' in which words and text fragments are represented as vectors. The difference between explicit and latent semantic analysis is the method used to obtain said concepts, a explained in the following sections.
+for an arbitrary number of bags labelled by $j$. This method is simple and powerful whenever a text is expected to fall in one of several discrete categories (such as spam filters or language detection\todo{ref}). However, for more complex tasks it proves lucrative to attempt instead to assign some kind of meaning to text fragments rather than to consider them analogous to lottery numbers or marbles. As an intuitive example of the insufficiency of the bag-of-words approach in more complex tasks, consider the problem of determining how related one text fragment is to another, which I'll treat in detail in section \ref{sec:social_media_impact} in order to determine the degree in which a media campaign has impacted a series of texts mined from social media. A simplified example of a media campaign by Google for their augmented reality product 'Google Glass' could be the text fragment 'Google unveils Google Glass'. If, in reaction to this, an excited user writes 'Larry Page launches intelligent eyewear', a naive bag-of-words like \eqref{eqn:bayesian_bow_thingy} would determine that the words in the user's exclamation could not have been drawn from the 'bag' represented by Google's campaign and so would wrongfully conclude that the two are unrelated. A more reasonable approach would assign some meaning to the words in which 'Larry Page' (Google's CEO) and 'Google', and 'Google Glass' and 'intelligent eyewear' are highly related, just as 'unveil' and 'launch' should be ascribed similar meanings.
+
+This notion of meaning will be elaborated on shortly, as it varies depending on the method of choice, but the overall idea is to ascribe to words a meaning which depends not only on the word itself, but also on the connection between the word and and existing repository of knowledge. The reader may think of this as mimicking the reading comprehension of humans. In itself, the word 'dog' for instance, contains a mere 24 bits of information if stored with a standard encoding, yet a human reader immediately associates a rich amount of existing knowledge to the word, such as dogs being mammals, related to wolves, being a common household pet, etc. The objective of both explicit and latent semantic analysis is to establish a high-dimensional 'concept space' in which words and text fragments are represented as vectors. The difference between explicit and latent semantic analysis is the method used to obtain said concepts, a explained in the following sections.
 
 \subsection{Semantic Analysis}
 \label{sec:semantic_analysis}
 Salton et al proposed in their 1975 paper \textit{A Vector Space Model for Automatic Indexing}\cite{Salton1975} an approach where words and text fragments are mapped with a linear transformation to vectors in a high-dimensional concept space,
-\begin{align}
-	T \rightarrow \ket{V} &= \sum_i v_i \ket{i}, v_i\in\mathbb{R}, \label{eqn:text2space}
-\end{align}
+\begin{equation}
+	T \rightarrow \ket{V} = \sum_i v_i \ket{i}, v_i\in\mathbb{R}, \label{eqn:text2space}
+\end{equation}
 where a similarity measure of two texts can be defined as the inner product of two normalized such vectors,
-\begin{align}
-	S(V,W) = \bracket{\hat{V}}{\hat{W}} = \frac{\sum_i v_i w_i}{\pp{\sum_i v_i^2}\pp{\sum_iw_i^2}},
-\end{align}
+\begin{equation}
+	S(V,W) = \bracket{\hat{V}}{\hat{W}} = \frac{\sum_i v_i w_i}{\pp{\sum_i v_i^2}\pp{\sum_iw_i^2}}, \label{eqn:cosine_similarity}
+\end{equation}
 and the cosine quasi-distance can be considered as a measure of semantic distance between texts:
-\begin{align}
+\begin{equation}
 	D(V,W) = 1-S(V,W).
-\end{align}
+\end{equation}
 This approach has later seen use in the methods of Latent Semantic Analysis (LSA) and Explicit Semantic Analysis (ESA). Both methods can be said to mimic human cognition in the sense that the transformation from \eqref{eqn:text2space} is viewed as a mapping of a text fragment to a predefined \textit{concept space} and thus, processing of texts relies heavily on external repositories of knowledge.
 
 The difference between LSA and ESA is how the concept space is established. Although I have used solely ESA for this project, I will give an extremely brief overview of LSA for completeness following (Landauer 1998 \cite{Landauer1998}). LSA constructs its concept space by first extracting every unique word encountered in a large collection of text corpora and essentially uses the leading eigenvectors (i.e. corresponding to the largest eigenvalues) of the word-word covariance matrix as the basis vectors of its conceptual space. This is the sense in which the concept are latent - rather than interpret text in terms of explicit concepts, such as 'healthcare', LSA would discover correlations between words such as 'doctor', 'surgery' etc. and consider that a latent concept. Owing to the tradeoff between performance and computational complexity, only about 400 such vectors are kept\cite{Nakov2000}. In psychology, LSA has been proposed as a possible model of fundamental human language acquisition as it provides computers a way of estimating e.g. word-word relatedness (a task which LSA does decently) using nothing but patterns discovered in the language it encounters\cite{Landauer1998}.
@@ -118,7 +122,71 @@ The downloaded tweets are stored as tweet objects which contain a built in metho
 %
 \floatcode[caption = {Example of a downloaded tweet.}, label = code:tweet_example]{pics/tweet_example.json}
 %
-As can be seen in the example, the tweet object contains not only the tweets textual content but also a wide range of metadata such as the hashtags contained in the tweet, users mentioned, time of creation, language etc.
-Indsæt fine grafer OSV!!! \todo{DO IT NAW!}
+As can be seen in the example, the tweet object contains not only the tweets textual content but also a wide range of metadata such as the hashtags contained in the tweet, users mentioned, time of creation, language etc. Using this, I wrote a script that harvested tweets mentioning some selected brand names for about 5 months which resulted in a massive dataset of 370 million tweets. This section demonstrates some applications of the methods outlined earlier to this dataset.
 
+\FloatBarrier
+\subsection{Trend Discovery and Monitoring}
+\label{sec:esa_monitoring}
+A simple application of the methods outlined above is a purely exploratory analysis. As an example, using code included in section \ref{sec:esa_examples}, I extracted the 10 concepts most closely related to every tweet mentioning Carlsberg for each week over a period of a few months. This gave a bar chart like figure \ref{fig:carlsberg_exploratory_chart} for each of those weeks.
+\begin{figure} %[htb]
+	\centering
+	\includegraphics[width=\figwidth]{pics/esa/irish_radio_bar_chart.pdf}
+	\caption{Bar chart representing the number of times various concepts appeared in the top 10 most semantically related concepts for each given tweet taken from week 18 of 2014.}
+	\label{fig:carlsberg_exploratory_chart}
+\end{figure}
+Figure \ref{fig:carlsberg_exploratory_chart} implies some significant relation between Carlsberg and Raidió Teilifís Éireann (RTE), the Irish national radio and television service. I then discovered that RTE usually does a quarterly report on Carlsberg's earnings, and that some web sites encouraged their followers to drink Carlsberg and listen to RTE's coverage of the Eurovision Song Contest taking place in week 18 of 2014.
 
+Another application is to manually select a few concepts of interest and then monitor how the number of tweets strongly related to them develops over time. For example I did an exploratory analysis as described above and occasionally saw the concept 'Kim Little' surface. This turned out to be a young football player signed to a team sponsored by Carlsberg, and when I produced a series of bar charts like that shown in figure \ref{fig:kim_little} and combined them into an animation, the bar representing Little tended to peak around dates on which news stories featuring her or her team could be found.
+\begin{figure}
+	\centering
+	\includegraphics[width=\figwidth]{pics/esa/kim_little.pdf}
+	\caption{Bar chart showing the concepts most related to tweets about Carlsberg for January 15th 2014.}
+	\label{fig:kim_little}
+\end{figure}
+Of course these method are only effective insofar the concepts of interest actually have an associated Wikipedia article. However, these concepts are merely the basis vectors of the semantic space in which an arbitrary text can be represented, so this procedure can be extended fairly elegantly to estimate the impact of e.g. a press release on social media. This is the subject of section \ref{sec:social_media_impact}.
+
+\FloatBarrier
+\subsection{Measuring Social Media Impact}
+\label{sec:social_media_impact}
+One possible application of the software I wrote to perform ESA is to provide a quantitative measure of the impact of some event on social media. For instance, some corporation or organization might be interested in learning precisely effectively a campaign or press release has reached the general public as it is expressed by social media. While my tweet harvesting script was running, Google posted a blog entry%
+\footnote{The original blog post is available at \url{http://googleresearch.blogspot.dk/2015/06/inceptionism-going-deeper-into-neural.html}}
+on their experiments with producing psychedelic images with deep neural network called \textit{Deep Dreams} which received widespread attention on social media.
+
+Using the text from the Deep Dreams blog post as a reference text, I converted each English tweet about Google from a period around the blog post to a semantic vector using \eqref{eqn:text2space} and computed their semantic cosine similarity with the reference text as described by \eqref{eqn:cosine_similarity}. Figure \ref{fig:deep_dreams_initial} shows this behaviour in the time around the release of the blog post.
+\begin{figure} %[htb]
+	\centering
+	\includegraphics[width=\figwidth]{pics/esa/deep_dreams_plot_timebin.pdf}
+	\caption{Graph of the mean semantic cosine similarity of tweets around the Deep Dreams press release. There is a clear peak around $t=0$ and the similarity appears increased in the period following the release. The error bars represent the true standard deviation of the sample mean $\sigma/\sqrt{N}$ for each time bin, each representing a 10-minute interval.}
+	\label{fig:deep_dreams_initial}
+\end{figure}
+A measure of impact should of course take into account the rate at which new tweets occur. Just as one would expect, not only semantic relatedness, but also tweet frequency increase drastically around an interesting event. To make the signal from figure \ref{fig:deep_dreams_initial} independent of the normal tweet frequency, yet sensitive to changes in it, I first find the difference in semantic relatedness between the signal and a reference signal obtained long before the event to be investigated, then modulate the signal by multiplying each bin with the activity $A$ given by the ratio between the current and baseline tweet frequency. As normal Twitter activity tends to vary greatly over a 24 hour period, I obtained a baseline tweet frequency by computing the average tweet rate, weighted by the activity, for each discreet time interval of the day, and then repeating that signal into the period after the event of interest. The baseline along with the observed tweet rate is shown in figure \ref{fig:deep_dreams_counts}.
+\begin{figure} %[htb]
+%	\centering
+	\subbottom[]{
+		\begin{minipage}[t][][b]{0.45\textwidth}
+			\includegraphics[width=0.5\figwidth, height=\dualheight, keepaspectratio]{pics/esa/15_07_25_counts_vs_baseline.pdf}
+		\end{minipage}%
+		\label{fig:deep_dreams_counts}
+	}
+	\subbottom[]{
+		\begin{minipage}[t][][b]{0.45\textwidth}
+			\includegraphics[width=0.5\figwidth, height=\dualheight, keepaspectratio]{pics/esa/deep_dreams_modulation_factor.pdf}
+		\end{minipage}
+		\label{fig:modulation_factor}
+		}
+	\caption{Tweet activity around the time the Deep Dreams blog entry was posted. The {\color{moerkeroed}{signal tweet rate}} increases with a factor of about 5 relative to the {\color{oldhat}{baseline rate}} around the post. Figure \ref{fig:modulation_factor}  shows the resulting {\color{nude}{modulation factor}} to the signal from in figure \ref{fig:deep_dreams_initial}.}	
+\end{figure}
+Modulating in this fashion and computing the difference between the observed signal and the baseline gives an expression of the 'impact rate' of a given time bin, which can be integrated to obtain a measure of the total impact which is independent of the average tweet rate before publication, which is practical if one wishes to compare e.g. the success of media campaigns for companies or organizations of varying sizes. This is shown in figure \ref{fig:total_impact_integral_thingy}.
+\begin{figure} %[htb]
+	\centering
+	\includegraphics[width=\figwidth]{pics/esa/deep_dreams_modulated_integration.pdf}
+	\caption{A measure of the total impact on Twitter by a press release can be obtained by integrating over the difference between a signal corresponding of the average tweet cosine similarity modulated by the relative activity, and a corresponding baseline. This measure does not depend on the typical Twitter activity and so can be used to compare the effectiveness of campaigns of varying size.}
+	\label{fig:total_impact_integral_thingy}
+\end{figure}
+If one wishes to include the number of tweets posted in the impact measure, the result can be computed and visualized nicely by again obtaining a baseline cosine similarity from a period prior to publication and then considering e.g. the cumulative deviation from that following the release, as shown in figure \ref{fig:deep_dreams_cumulative_blabla}.
+\begin{figure} %[htb]
+	\centering
+	\includegraphics[width=\figwidth]{pics/esa/deep_dreams_tweet_by_tweet.pdf}
+	\caption{The cumulative deviation from the mean cosine similarity between the Deep Dreams post and tweets in the period around its release.}
+	\label{fig:deep_dreams_cumulative_blabla}
+\end{figure}

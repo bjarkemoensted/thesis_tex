@@ -447,7 +447,7 @@ The left hand side of \eqref{eqn:plan_simpel} gives zero for points in the plane
 \end{equation}
 for the points that are closest to the separating plane. Those points located on the margin are encircled in figure \ref{fig:separating_plane_example1}. In general then, the meaning of the sign and magnitude of
 \begin{equation}
-	\mb{w}\cdot \mb{x} + b
+	\mb{w}\cdot \mb{x} + b  \label{eqn:classification_decision_function}
 \end{equation}
 will be the predicted class and a measure of prediction confidence, respectively, for new data points. Finally, note that $\mb{w}$ can be expanded in terms of the data points that are on the margin in figure \ref{fig:separating_plane_example1} as
 \begin{equation}
@@ -459,17 +459,15 @@ these $\mb{x}_i$, the position vectors of the margin points in data space, are t
 Assuming first that it is possible to slice the data space into two regions that contain only points corresponding to one class each, and that the plane's normal vector has already been rescaled according to \eqref{eqn:rescaled_normal_vector}, the following inequalities hold:
 \begin{equation}
 	\begin{aligned}
-		\mb{x_i}\cdot \mb{w} + b &\ge 1, y_i = +1, \\
-		\mb{x_i}\cdot \mb{w} + b &\le -1, y_i = -1.
+		\mb{x}_i\cdot \mb{w} + b &\ge 1, y_i = +1, \\
+		\mb{x}_i\cdot \mb{w} + b &\le -1, y_i = -1.
 	\end{aligned} \label{eqn:dedersenslagrangebetingelserder}
 \end{equation}
 Multiplying by $y_i$, both simply become
 \begin{equation}
-	y_i\pp{\mb{x_i}\cdot \mb{w} + b} - 1 \ge 0.
+	y_i\pp{\mb{x}_i\cdot \mb{w} + b} - 1 \ge 0. \label{eqn:kombineret_lagrangeting}
 \end{equation}
-The separation between the two margins shown with dashed lines in figure \ref{fig:separating_plane_example1} is $2/|\mb{w}|$, 
-\todo{ikke 100\% tryg her...}
-so the Lagrangian
+The distance between the separating plane and each of the margins in figure \ref{fig:separating_plane_example1} is $1/|\mb{w}|$, so in order to maximize the separation, $|\mb{w}|$ must be minimized. For mathematical convenience, $\frac{1}{2} |\mb{w}|^2$, rather than $|\mb{w}|$ is included in the Lagrangian, which then becomes
 \begin{equation}
 	L = \frac{1}{2} |\mb{w}|^2 - \sum_i \alpha_i y_i \pp{\mb{x}_i\cdot \mb{w} + b - 1}, \label{eqn:primal_lagrangian}
 \end{equation}
@@ -493,39 +491,58 @@ These can be plugged back into \eqref{eqn:primal_lagrangian} to obtain
 	- \sum_i \alpha_i y_i \big( \mb{x}_i \cdot \sum_j \alpha_j y_j \mb{x}_j + b \big) + \sum_i \alpha_i, \\
 	L_D &= -\frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i y_j \mb{x}_i \mb{x}_j + \sum_i \alpha_i. \label{eqn:dual_lagrangian}
 \end{align}
-A problem with this is that eqs \ref{eqn:dedersenslagrangebetingelserder} can only be satisfied in the completely separable case, although it is easy to imagine an example in which a classifier performs well but not flawlessly on the training set. For instance, if two points, one from each class, in figure \ref{fig:separating_plane_example1} were permuted, the classifier shown in the plot would still do a very good job, but eqs. \ref{eqn:dedersenslagrangebetingelserder} would not be satisfiable, causing the method to fail. This is remedied by introducing slack variables
+A problem with this is that eqs \ref{eqn:dedersenslagrangebetingelserder} can only be satisfied in the completely separable case, although it is easy to imagine an example in which a classifier performs well but not flawlessly on the training set. For instance, if two points, one from each class, in figure \ref{fig:separating_plane_example1} were permuted, the classifier shown in the plot would still do a very good job, but eqs. \ref{eqn:dedersenslagrangebetingelserder} would not be satisfiable, causing the method to fail. This is remedied by introducing slack variables\cite{Boyd2004}
 \begin{align}
-	\mb{x_i}\cdot \mb{w} + b &\ge 1 - \xi_i,\quad y_i = +1, \\
-	\mb{x_i}\cdot \mb{w} + b &\le -(1 - \xi_i),\quad y_i = -1, \\
-	\xi_i &\ge 0,
+\begin{split}
+		\mb{x}_i\cdot \mb{w} + b &\ge 1 - \xi_i,\quad y_i = +1, \\
+		\mb{x}_i\cdot \mb{w} + b &\le -(1 - \xi_i),\quad y_i = -1, \\
+		\xi_i &\ge 0,
+\end{split} \label{eqn:slack_variables}
 \end{align}
-The above can be rewritten exactly as previously, except another set of non-negative Lagrange multipliers are added to \eqref{eqn:primal_lagrangian} to ensure positivity of the $\xi_i$. Also a cost term, usually $C\cdot\sum_i\xi_i$, is added to the Lagrangian to keep separability high:
+which allows the algorithm to misclassify. This should come without a cost to the overall Lagrangian, or one would just end up classifying randomly, so a 'cost term', $C\cdot\sum_i\xi_i$ is added as well. The value of $C$ (as well as a few similar parameters which have yet to be introduced) is usually determined experimentally by simply varying it across some space of possible values and choosing the value resulting in the best performance - see for instance figure \ref{fig:grid_search_gamma_c}. In the case of the misclassification cost parameter $C$, low values will result in low performance, whereas too large values will result in overfitting. The above can be rewritten exactly as previously, except another set of non-negative Lagrange multipliers $\mu_i$ are added to \eqref{eqn:primal_lagrangian} to ensure positivity of the $\xi_i$, resulting in
 \begin{equation}
-	L = \frac{1}{2} |\mb{w}|^2 + C\cdot \sum_i\xi_i - \sum_i \alpha_i y_i \pp{\mb{x}_i\cdot \mb{w} + b - 1 + \xi_i} - \sum_i\mu_i\xi_i.
+	L = \frac{1}{2} |\mb{w}|^2 + C\cdot \sum_i\xi_i - \sum_i \alpha_i y_i \pp{\mb{x}_i\cdot \mb{w} + b - 1 + \xi_i} - \sum_i\mu_i\xi_i. \label{eqn:langgrimlagrangian}
 \end{equation}
 This results in the same dual Lagrangian $L_D$ as before, but with an upper bound on the $\alpha_i$:
 \begin{equation}
 	0 \le \alpha_i \le C.
 \end{equation}
-The values of the slack variables $\xi_i$ and the cost term $C$ are typically decided by performing a 'grid search' in which the performance is evaluated for each possibly combination of the parameters and the optimal combination used in the final classifier. Figure~\ref{fig:grid_search_heatmap} shows a heat map of the results of a grid search over the parameters in question.
-\begin{figure}
-	\centering
-	\includegraphics[width = \figwidth]{pics/ml/grid_search_svr_e_logc.pdf}
-	\caption{Heat map of the result of a grid search over the parameter space of the variables $\xi$ and $C$. The colors signify the mean squared error of a support vector regression problem, which is closely related to the classification problem described in the present section. Note how overfitting damages performance for high values of $C$.}
-	\label{fig:grid_search_heatmap}
-\end{figure}
+% Nopenopenopenope
+%\begin{figure}
+%	\centering
+%	\includegraphics[width = \figwidth]{pics/ml/grid_search_svr_e_logc.pdf}
+%	\caption{Heat map of the result of a grid search over the parameter space of the variables $\xi$ and $C$. The colors signify the mean squared error of a support vector regression problem, which is closely related to the classification problem described in the present section. Note how overfitting damages performance for high values of $C$. The minimum MSE was obtained using $C=26.5$ and $\xi=0.11$.}
+%	\label{fig:grid_search_heatmap}
+%\end{figure}
+The methods outlined above can also be used to solve regression, rather than classification, problems\cite{Smola2004}. The training data will then be in $\mathbb{R}^{N+1}$ rather than in $\mathbb{R}^N \otimes \cb{\pm1}$, and the value of the decision function in \eqref{eqn:classification_decision_function} is predicted instead of using only its sign. The criterion of correct classification from \eqref{eqn:kombineret_lagrangeting} is replaced by the demand that predictions be within some tolerated margin $\epsilon$ of the true value of the training point $y_i$, so \eqref{eqn:dedersenslagrangebetingelserder} becomes
+\begin{equation}
+	-\epsilon \leq \mb{x}_i\cdot\mb{w} + b - y_i \leq \epsilon
+\end{equation}
+so when slack variables $\xi_i$ and $\xi^{*}_i$ (for the lower and upper bound, respectively) like in \eqref{eqn:slack_variables} are introduced, the Lagrangian from \eqref{eqn:langgrimlagrangian} becomes
+\begin{equation}
+	L = \frac{1}{2} |\mb{w}|^2 + C \sum_{i}\pp{\xi_i + \xi^{*}_i},
+\end{equation}
+with constraints
+\begin{align}
+	\mb{x}_i\cdot\mb{w} + b - y_i &\geq -\pp{\epsilon + \xi_i}, \\
+	\mb{x}_i\cdot\mb{w} + b - y_i &\leq \epsilon + \xi^{*}_i, \\
+	\xi_i, \xi^{*} &\geq 0.
+\end{align} 
+
+
 The main point to be emphasized here is that the training data $\mb{x}_i$ only enter into the dual Lagrangian of \eqref{eqn:dual_lagrangian} as inner products. This is essential when extending the SVM model to nonlinear cases, which is the subject of the following section.
 
 \subsection{Generalizing to the non-linear case}
+\label{sec:svm_nonlinear}
 The fact that the data $\mb{x}_i$ only occur as inner products in \eqref{eqn:dual_lagrangian} makes one way of generalizing to non-linearly separable datasets straightforward: Referring back to figure \ref{fig:island_example}, one might imagine bending the plane containing the data points by curling the edges outwards in a third dimension after which a two-dimensional plane could separate the points very well. In general, this means applying some mapping
 \begin{equation}
 	\Phi: \mathbb{R}^l \to \mathbb{R}^h, \quad h > l,
 \end{equation}
 to the $\mb{x}_i$ ($l$ and $h$ are for low and high, respectively). For example, one could look for a mapping such that the new inner product becomes
 \begin{equation}
-	\Phi(\mb{x}_i) \cdot\Phi(\mb{x}_j) = \pp{\mb{x_i}\cdot \mb{x_j}}^2. 
+	\Phi(\mb{x}_i) \cdot\Phi(\mb{x}_j) = \pp{\mb{x}_i\cdot \mb{x}_j}^2. 
 \end{equation}
-I'll describe the components of each vector separately, so I'm going to change notation to let the subscripts denote coordinates and using $\mb{x}$ and $\mb{y}$ as two arbitrary feature vectors, where the latter shouldn't be confused with the class label used earlier. As an example, in two dimensions the above becomes
+I'll describe the components of each vector separately, so I'm going to change notation to let the subscripts denote coordinates and using $\mb{x}$ and $\mb{y}$ as two arbitrary feature vectors, where the latter shouldn't be confused with the class labels used earlier. As an example, in two dimensions the above becomes
 \begin{equation}
 	\pp{\mb{x} \cdot \mb{y}}^2 = \pp{\sum_{i=1}^2 x_i y_i}^2 = x_1^2 y_1^2 + 2x_1y_1x_2y_2 + x_2^2 y_2^2,
 \end{equation}
@@ -540,7 +557,6 @@ This can be generalized to $d$-dimensional feature vectors and to taking the $n$
 where the subscript $\sum_{i=1}^d k_i = n$ simply means that the sum goes over any combination of $d$ non-negative integers $k_i$ that sum to $n$. I wish to rewrite this slightly for two reasons: to simplify the notation in order to make a later proof more manageable, and to help quantify how quickly the number of dimensions in the output space grows to motivate a trick to avoid these explicit mappings.
 
 As stated, the sum on the RHS of \eqref{eqn:multinomial_raw} runs over all combinations of $d$ integers which sum to $n$.
-\todo{Dobbeltjek om notation er fornuftig.}
 This can be simplified by introducing a function $K$, which simply maps
 \begin{equation}
 	K: n,d \mapsto \cb{\cb{k} \in \mathbb{N}^d \left| \sum_{i=1}^d k_i = n \right.}, 
@@ -593,7 +609,7 @@ One commonly used kernel function is the RBF, or radial basis function, kernel:
 \end{equation}
 Burges \cite{burges1998} shows that the polynomial kernel is valid, so I'll show how the argument extends to the RBF kernel in the following.
 
-Mercer's condition \todo{find en eller anden kilde} states that for a kernel function $K(\mb{x}, \mb{y})$, there exists a corresponding Hilbert space $\mathcal{H}$ and a mapping $\Phi$ as specified earlier, iff any $L^2$-normalizable function $g(\mb{x})$ satisfies
+Mercer's condition\cite{Smola1998} states that for a kernel function $K(\mb{x}, \mb{y})$, there exists a corresponding Hilbert space $\mathcal{H}$ and a mapping $\Phi$ as specified earlier, iff any $L^2$-normalizable function $g(\mb{x})$ satisfies
 \begin{equation}
 	\int K(\mb{x}, \mb{y}) g(\mb{x}) g(\mb{y}) \ud\mb{x} \ud\mb{y} \ge 0. \label{eqn:mercers_condition}
 \end{equation}
@@ -617,7 +633,7 @@ which can be plugged back into \eqref{eqn:grimligningsomjegaldrigkommertilatbrug
 \begin{equation}
 	K(\mb{x}, \mb{y}) = \sum_{i=0}^\infty \sum_{K(i,d)} \frac{(-1)^i}{i!\sigma^i}  C_{\cb{k}} \e^{|\mb{x}|^2/2\sigma} \e^{|\mb{y}|^2/2\sigma} \prod_{j = 1}^d x_j^{k_j} y_j^{k_j}. \label{eqn:ehrmagehrditsseparable}
 \end{equation}
-The underlying reason for these algebraic shenanigans is that \eqref{eqn:ehrmagehrditsseparable} is clearly separable so that the integral in \eqref{eqn:mercers_condition} from from Mercer's condition becomes
+The underlying reason for these algebraic shenanigans is that \eqref{eqn:ehrmagehrditsseparable} is clearly separable so that the integral in \eqref{eqn:mercers_condition} from Mercer's condition becomes
 \begin{align}
 	& \int K(\mb{x}, \mb{y}) g(\mb{x}) g(\mb{y}) \ud\mb{x} \ud\mb{y} \\
 	 = & \sum_{i=0}^\infty \sum_{K(i,d)} \frac{(-1)^i}{i!\sigma^i}  C_{\cb{k}} \int_{\mathbb{R}^{2d}} \e^{|\mb{x}|^2/2\sigma} \e^{|\mb{y}|^2/2\sigma} \prod_{j = 1}^d x_j^{k_j} y_j^{k_j} g(\mb{x}) g(\mb{y}) \ud\mb{x}\ud\mb{y} \\
@@ -628,7 +644,7 @@ The underlying reason for these algebraic shenanigans is that \eqref{eqn:ehrmage
 \end{align}
 Hence, radial basis functions satisfy Mercer's condition and the kernel described above can be plugged into the dual Lagrangian from \eqref{eqn:dual_lagrangian} to obtain
 \begin{equation}
-	L_D = -\frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i y_j \e^{|\mb{x_i}-\mb{x_j}|^2/2\sigma} + \sum_i \alpha_i,
+	L_D = -\frac{1}{2} \sum_{i,j} \alpha_i \alpha_j y_i y_j \e^{|\mb{x}_i-\mb{x}_j|^2/2\sigma} + \sum_i \alpha_i,
 \end{equation}
 which must be maximized subject to the same constraints as earlier. The concrete optimization procedure is complicated and already implemented in most machine learning libraries, so I choose not to go into details with that, but instead to demonstrate the effectiveness of the RBF kernel approach on the non-linear-separable points that were generated earlier. figure~\ref{fig:kernel_trick_example} shows the points again, along with the \textit{decision frontier} i.e. the curve which separates regions in which points are classified into separate classes.
 \begin{figure}
@@ -643,10 +659,81 @@ The typical way of evaluating this is to perform k-fold validation, meaning that
 The $\gamma$ parameter is often fixed by performing a grid search similar to that discussed earlier. Figure \ref{fig:grid_search_gamma_c} shows the resulting heat map from a grid search.
 \begin{figure}
 	\centering
-	\includegraphics[width = \figwidth]{pics/ml/grid_search_svr_gamma_c.pdf}
-	\caption{Result of a grid search for the optimal combination of values for the cost parameter $C$ and the sharpness $\gamma$ of the Gaussian kernel function used.}
+	\includegraphics[width = \figwidth]{pics/ml/15_07_20_grid_search_g_thr_extra.pdf}
+	\caption{Result of a grid search for the optimal combination of values for the cost parameter $C$ and the sharpness $\gamma$ of the Gaussian kernel function giving optimal values of $C = 0.52$ and $\gamma = 0.12$.}
 	\label{fig:grid_search_gamma_c}
 \end{figure}
+
+\FloatBarrier
+\subsection{Implementing a custom weighted radial basis function kernel}
+In general, the features extracted as described in section \ref{sec:data_extraction} are too numerous for efficient implementations of most machine learning schemes. \cite{demontjoye2013} work around this by determining the linear correlation between each feature and the target values, and then discarding features whose correlation is below some threshold and letting the rest contribute equally in the SVM. They never explicate this threshold but state that they include features 'significantly related' to the target values, which convention would suggest means a threshold of $0.05$. \cite{Pietersma2011} have demonstrated significant improvements in SVM performance by assigning variable importances to each feature, so I implemented a modified kernel function where I don't just discard features with linear correlations below some threshold but also assign to each remaining feature a normalized weight given by its correlation with the output variable.
+
+I do this by defining a diagonal matrix $\hat{M}$ where the $i, i$th element is the linear correlation coefficient between feature $i$ and the target variable, and using the matrix as a metric in the exponent of the usual radial basis functions so the kernel $K(\mb{x}, \mb{y})$ becomes
+\begin{equation}
+	\e^{\gamma|\mb{x}-\mb{y}|^2} \rightarrow \e^{\gamma \pp{\mb{x}-\mb{y}}^T \hat{M} \pp{\mb{x}-\mb{y}}}
+\end{equation}
+Note that this does not change the validity of the proof I gave in section \ref{sec:svm_nonlinear}, so this weighted RBF kernel also satisfies Mercer's condition and may hence be used as a kernel function. It turned out to be nontrivial to write an implementation of this which had a syntax consistent with that of the default methods available in the library I used, and which provided a similarly simple way to grid search over its parameters ($C$ and $\gamma$ as in the usual RBF kernel SVM along with a threshold parameter). I ended up solving this by writing a metamethod to provide a kernel matrix based on an input list of variable importances as well as a default sharpness parameter denoted $\gamma$.
+\begin{snippet}
+	def make_kernel(importances, gamma = 1.0):
+		'''Returns a weighted radial basis function (WRBF) kernel which can be 
+		passed to an SVM or SVR from the sklearn module.
+		
+		Parameters:
+		-----------------------
+		importances : list
+		  The importance of each input feature. The value of element i can mean
+		  e.g. the linear correlation between feature i and target variable y.
+		  None means feature will be weighted equally.
+		
+		gamma : float
+		  The usual gamma parameter denoting inverse width of the gaussian used.
+		'''
+		def kernel(x,y, *args, **kwargs):
+			d = len(importances)  #number of features
+			impsum = sum([imp**2 for imp in importances])
+			if not impsum == 0:
+				normfactor = 1.0/np.sqrt(impsum)
+			else:
+				normfactor = 0.0
+			#Metric to compute distance between points
+			metric = dok_matrix((d,d), dtype = np.float64)
+			for i in xrange(d):
+				metric[i,i] = importances[i]*normfactor
+			# 
+			result = np.zeros(shape = (len(x), len(y)))
+			for i in xrange(len(x)):
+				for j in xrange(len(y)):
+					diff = x[i] - y[j]
+					dist = diff.T.dot(metric*diff)
+					result[i,j] = np.exp(-gamma*dist)
+			return result
+		return kernel
+\end{snippet}
+With that in place, it was a simple matter to implement classifiers and regressors by inheriting from the default classes and overriding the constructor methods like this:
+\begin{snippet}
+	class WRBFR(svm.SVR):
+		'''Weighted radial basis function support vector regressor.'''
+		def __init__(self, importances, C = 1.0, epsilon = 0.1,
+				      gamma = 0.0):
+		kernel = make_kernel(importances = importances, gamma = gamma)
+		super(WRBFR, self).__init__(C = C, epsilon = epsilon, kernel = kernel)
+\end{snippet}
+Figures \ref{fig:grid_thr_g} and \ref{fig:grid_thr_c} show heat maps resulting from grid searches over the threshold parameter versus $\gamma$ and $C$, respectively. Interestingly, the ideal correlation threshold seems to be well above the value used in \cite{demontjoye2013}.
+\begin{figure}
+	\includegraphics[width=\figwidth]{pics/ml/15_07_17_grid_search_g_thr_extra.pdf}
+	\caption{Heat map resulting from a grid search over the parameter space of the linear correlation threshold and the default sharpness $\gamma$ of the radial basis functions showing optimal values of $0.25$ and $0.15$ for $\gamma$ and the threshold, respectively.}
+	\label{fig:grid_thr_g}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\figwidth]{pics/ml/15_07_15_grid_search_c_thr_extra.pdf}
+	\caption{Heat map resulting from a grid search over the parameter space of the linear correlation threshold and the cost parameter $C$ of the radial basis functions showing optimal values of $3.6$ and $0.13$ for $\gamma$ and the threshold, respectively.}
+	\label{fig:grid_thr_c}
+\end{figure}
+
+
+
+
 
 \FloatBarrier
 \subsection{Statistical subtleties}
@@ -698,7 +785,7 @@ The performance seems to stagnate around 100 trees, and remain constant after th
 The robustness to irrelevant features and overfitting described earlier also plays a role in the application of random forests in conjunction with other schemes. SVMs as described in section \ref{sec:svm} can be sensitive to irrelevant data\cite{Pietersma2011}. There exist off-the-shelf methods, such as recursive feature elimination (RFE)\cite{Guyon2002}, for use with linear SVMs, but to my knowledge, there is no 'standard' way to eliminate irrelevant features when using a non-linear kernel. However, it is possible to use a random forest approach to obtain the relative importance of the various features and then use only the most important ones in another machine learning scheme which is less tolerant to the inclusion of irrelevant data. The relative importance of feature $j$ can be estimated  by first constructing a random forest and evaluating its performance $s$, then randomly permuting the values of feature $j$ across the training sample and measure the damage it does to the performance of the forest by comparing with the permuted score $s_p$. The ratio of the mean to standard deviation of those differences:
 \begin{equation}
 	w_j = \frac{\langle s-s_p \rangle}{\mathrm{std}(s - s_p)}
-\end{equation}
+\end{equation}	
 
 
 Random forests also provide a natural measure of similarity between data points. Given data points $i$ and $j$ these can be plugged into all their OOB decision trees, or a random subset thereof, and the fraction of the attempts in which both end up at the same leaf can be taken as a measure of similarity. This can be used to generate a proximity matrix for the data points, and it can be used as a metric for determining the nearest neighbours of a new point in conjunction with a simple nearest neighbour classifier.
@@ -708,10 +795,21 @@ Skriv en masse om den smart random forest NN-model. \todo{Do iiit!}
 
 
 \section{Results}
+
+\subsection{Big Five Personality Traits}
 \FloatBarrier
 HARJ
 \begin{figure}
-	\includegraphics[width=\figwidth]{pics/ml/bootstrap_results_rf_svr_twosigma.pdf}
-	\caption{Comparison of performance of models using {\color{moerkeroed}random forest} and {\color{oldhat}support vector regression} with a {\color{nude} baseline model} which always predicts the mean of the training sample. The y axis shows the mean error of each model and the error bars show the $95$-percentile around the median scores obtained by running on 1000 bootstrap samples.}
-	\label{fig:bootstrap_results_rf}
+	\includegraphics[width=\figwidth]{pics/ml/ml_cross_val_results.pdf}
+	\caption{Comparison of performance of models using {\color{moerkeroed}random forest}, {\color{oldhat}support vector regression} and {\color{nude} weighted radial basis function regressor} with a {\color{black} \textbf{baseline model}} which always predicts the mean of the training sample. The y axis shows the mean error of each model and the error bars show the $95$-percentile around the median scores obtained by running on 1000 bootstrap samples.}
+	\label{fig:cross_val_fail}
 \end{figure}
+
+\FloatBarrier
+\subsection{Miscellaneous Traits}
+Her står der ting om figur \ref{fig:correlation_grid}. \todo{Opdater med ML}
+\begin{figure}
+	\includegraphics[width=\figwidth]{pics/ml/correlation_grid.pdf}
+	\caption{Triangle of Pearson correlation coefficients for various miscellaneous traits.}
+	\label{fig:correlation_grid}
+	\end{figure}
